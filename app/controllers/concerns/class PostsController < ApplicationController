@@ -1,0 +1,63 @@
+class PostsController < ApplicationController
+
+	def index
+		@posts = Post.all
+	end
+
+	def search
+		if params[:lat] && params[:lng]
+      Post.destroy_all
+      Tag.destroy_all
+      @instagram = Instagram.media_search(params[:lat],params[:lng],{distance:5000,count:100})
+      puts @instagram.first
+      @instagram.each do |p|
+        #might not need to convert to hash but it's happening
+        post = p.to_hash
+        #grab type, make plural to match the API
+        media_key = "#{p.type}s"
+        #some posts have captions while others do not.  Handle this problem.
+        caption = post["caption"] ? post["caption"]["text"] : nil
+        #initialize empty tags array, and then...
+        tags = []
+        #...inhale all of the hashtags!
+        post['tags'].each do |tag_name|
+          tags.push(Tag.find_or_create_by_name(tag_name))
+        end
+        #make an attributes hash
+        attrs = {
+          ig_id: post["id"],
+          user_id: post["user"]["id"],
+          lat: post["location"]["latitude"],
+          caption:caption,
+          lng: post["location"]["longitude"],
+          timestamp: post["created_time"],
+          link: post["link"],
+          media_type: post["type"],
+          media_small: post[media_key]["low_resolution"]["url"],
+          media_large: post[media_key]["standard_resolution"]["url"],
+          tags:tags
+        }
+        #stick it in a new post & save
+        Post.create(attrs)
+
+        
+      end
+      puts @instagram.first
+      #use that sweet images scope so only images appear on the map (no videos yet boo hoo)
+      @posts = Post.images
+    end
+      #no need to render json- the jbuilder does that for us
+	end
+
+	def show
+    #find
+		@post = Post.find(params[:id])
+     respond_to do |format|
+       #html is a partial
+       format.html{render partial: 'show'}
+       #empty hash so that jbuilder will do json work
+       format.json{}
+     end
+	end
+
+end

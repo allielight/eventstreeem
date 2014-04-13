@@ -1,0 +1,13 @@
+<h1> Your Streeem </h1>
+
+<% @tweets.each do |tweet| %>
+	<p><%= tweet %></p>
+<% end %>
+
+<% @instagram.each do |instagram| %>
+	<p><%= image_tag instagram.images.standard_resolution.url %></p>
+<% end %>
+
+<style>
+	
+</style>

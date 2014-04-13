@@ -1,0 +1,13 @@
+class TagsController < ApplicationController
+  def index
+    #get all of the tags we created
+    @tags = Tag.all
+    
+    respond_to do |format|
+      #tags index is rendered as partial
+      format.html {render partial: 'index'}
+      #stick it in the json
+      format.json {render json: @tags}
+    end
+  end
+end
