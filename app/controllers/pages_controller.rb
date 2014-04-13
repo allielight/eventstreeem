@@ -8,7 +8,7 @@ class PagesController < ApplicationController
   	puts response
   end
 
-  def about
+  def eventstreeem
 
 	client = Twitter::REST::Client.new do |config|
 	  config.consumer_key        = "mOwxZuieDnvIrM4PlBxmcQ"
