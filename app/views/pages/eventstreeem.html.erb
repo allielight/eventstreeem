@@ -278,16 +278,10 @@ $("div.instapic").hide();
 </body>
 </html>
 
-<html>
-<head>
-  <title>ES</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+<% @tweets.each do |tweet| %>
+	<p><%= tweet %></p>
+<% end %>
 
-<%= yield %>
-
-</body>
-</html>
+<% @instagram.each do |instagram| %>
+	<p><%= image_tag instagram.images.standard_resolution.url %></p>
+<% end %>
